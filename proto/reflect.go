@@ -7,7 +7,7 @@ package proto
 import (
 	"context"
 	"fmt"
-	"github.com/lazada/grpc-ui/reflection"
+	"github.com/komly/grpc-ui/reflection"
 	"strings"
 	"time"
 )

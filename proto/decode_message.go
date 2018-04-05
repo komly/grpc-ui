@@ -8,7 +8,7 @@ import (
 	"fmt"
 	"reflect"
 
-	"github.com/lazada/grpc-ui/reflection"
+	"github.com/komly/grpc-ui/reflection"
 )
 
 func decodeMessage(buf []byte, n int, typeName string, typeInfo map[string]*reflection.TypeInfo, fieldPath []int) (x interface{}, i int, err error) {

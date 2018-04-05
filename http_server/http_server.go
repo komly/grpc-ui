@@ -7,8 +7,8 @@ import (
 	"net/http"
 
 	"github.com/gorilla/websocket"
-	"github.com/lazada/grpc-ui/proto"
-	"github.com/lazada/grpc-ui/reflection"
+	"github.com/komly/grpc-ui/proto"
+	"github.com/komly/grpc-ui/reflection"
 )
 
 

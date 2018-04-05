@@ -1,4 +1,4 @@
-package: github.com/lazada/grpc-ui
+package: github.com/komly/grpc-ui
 import:
 - package: github.com/golang/protobuf
   subpackages:

@@ -2,7 +2,7 @@ package proto
 
 import (
 	"fmt"
-	"github.com/lazada/grpc-ui/reflection"
+	"github.com/komly/grpc-ui/reflection"
 )
 
 // Dynamic proto Message

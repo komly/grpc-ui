@@ -8,15 +8,15 @@
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/lazada/grpc-ui.git"
+    "url": "git+https://github.com/komly/grpc-ui.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/lazada/grpc-ui/issues"
+    "url": "https://github.com/komly/grpc-ui/issues"
   },
-  "homepage": "https://github.com/lazada/grpc-ui#readme",
+  "homepage": "https://github.com/komly/grpc-ui#readme",
   "devDependencies": {
     "awesome-typescript-loader": "^3.3.0",
     "babel-core": "^6.26.0",

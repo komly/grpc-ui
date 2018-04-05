@@ -1,7 +1,7 @@
 package main
 
 import (
-	"github.com/lazada/grpc-ui/test_server/pb"
+	"github.com/komly/grpc-ui/test_server/pb"
 	"golang.org/x/net/context"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/reflection"

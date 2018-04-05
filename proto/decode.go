@@ -11,7 +11,7 @@ import (
 	"github.com/golang/protobuf/proto"
 	"github.com/golang/protobuf/protoc-gen-go/descriptor"
 
-	"github.com/lazada/grpc-ui/reflection"
+	"github.com/komly/grpc-ui/reflection"
 )
 
 func Decode(typeInfo map[string]*reflection.TypeInfo, typeName string, buf []byte, fieldPath []int) (msg interface{}, err error) {

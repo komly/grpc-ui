@@ -10,7 +10,7 @@ import (
 
 	"github.com/golang/protobuf/proto"
 	"github.com/golang/protobuf/protoc-gen-go/descriptor"
-	"github.com/lazada/grpc-ui/reflection"
+	"github.com/komly/grpc-ui/reflection"
 )
 
 func Encode(typeInfo map[string]*reflection.TypeInfo, typeName string, data []FieldValue) (resBuf []byte, err error) {

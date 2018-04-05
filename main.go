@@ -1,8 +1,8 @@
 package main
 
 import (
-	"github.com/lazada/grpc-ui/config"
-	"github.com/lazada/grpc-ui/http_server"
+	"github.com/komly/grpc-ui/config"
+	"github.com/komly/grpc-ui/http_server"
 	"log"
 	"os"
 )

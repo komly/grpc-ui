@@ -1,7 +1,7 @@
 package proto
 
 import (
-	"github.com/lazada/grpc-ui/fixtures/simple"
+	"github.com/komly/grpc-ui/fixtures/simple"
 	"google.golang.org/grpc"
 	grpcr "google.golang.org/grpc/reflection"
 	"net"
