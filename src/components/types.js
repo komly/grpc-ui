@@ -1,35 +1,76 @@
+/* @flow */
 
-export const TYPE_DOUBLE   = 1;
-export const TYPE_FLOAT    = 2;
-export const TYPE_INT64    = 3;
-export const TYPE_UINT64   = 4;
-export const TYPE_INT32    = 5;
-export const TYPE_FIXED64  = 6;
-export const TYPE_FIXED32  = 7;
-export const TYPE_BOOL     = 8;
-export const TYPE_STRING   = 9;
-export const TYPE_GROUP     = 10;
-export const TYPE_MESSAGE   = 11;
-export const TYPE_BYTES   = 12;
-export const TYPE_UINT32   = 13;
-export const TYPE_ENUM   = 14;
-export const TYPE_SFIXED32   = 15;
-export const TYPE_SFIXED64   = 16;
-export const TYPE_SINT32   = 17;
-export const TYPE_SINT64   = 18;
-
-export const INT_TYPES = {}
-
-const ints = [
-    TYPE_DOUBLE, TYPE_FLOAT, TYPE_INT64, TYPE_UINT64,
-    TYPE_INT32, TYPE_FIXED64, TYPE_FIXED32, TYPE_UINT32,
-    TYPE_SFIXED32, TYPE_SFIXED64, TYPE_SINT32, TYPE_SINT64
-];
-for (let i = 0; i <  ints.length; i++)  {
-    INT_TYPES[ints[i]] = i;
+export interface Field {
+    is_repeated: bool;
+    type_id: TypeID;
+    type_name: string;
 }
 
-export const getTypeName = (type_id) => {
+export interface Type {
+    fields: Array<Field>;
+}
+
+export type Value = string | Array<Value>
+
+const TYPE_DOUBLE: 1 = 1;
+const TYPE_FLOAT: 2 =  2;
+const TYPE_INT64: 3 =  3;
+const TYPE_UINT64: 4 = 4;
+const TYPE_INT32: 5  =  5;
+const TYPE_FIXED64: 6 = 6;
+const TYPE_FIXED32: 7 = 7;
+const TYPE_BOOL: 8    = 8;
+const TYPE_STRING: 9 =  9;
+const TYPE_GROUP: 10  = 10;
+const TYPE_MESSAGE: 11 = 11;
+const TYPE_BYTES: 12 =   12;
+const TYPE_UINT32: 13 =  13;
+const TYPE_ENUM: 14   =  14;
+const TYPE_SFIXED32: 15 = 15;
+const TYPE_SFIXED64: 16 = 16;
+const TYPE_SINT32: 17 =  17;
+const TYPE_SINT64: 18  =  18;
+
+type TypeID =
+    typeof TYPE_DOUBLE |
+    typeof TYPE_FLOAT  |
+    typeof TYPE_INT64  |
+    typeof TYPE_UINT64 |
+    typeof TYPE_INT32  |
+    typeof TYPE_FIXED64 |
+    typeof TYPE_FIXED32 |
+    typeof TYPE_BOOL   |
+    typeof TYPE_STRING |
+    typeof TYPE_GROUP  |
+    typeof TYPE_MESSAGE |
+    typeof TYPE_BYTES |
+    typeof TYPE_UINT32 |
+    typeof TYPE_ENUM   |
+    typeof TYPE_SFIXED32 |
+    typeof TYPE_SFIXED64 |
+    typeof TYPE_SINT32 |
+    typeof TYPE_SINT64
+
+
+const NUMBER_TYPE_IDS = new Set([
+    TYPE_DOUBLE,
+    TYPE_FLOAT,
+    TYPE_INT64,
+    TYPE_UINT64,
+    TYPE_INT32,
+    TYPE_FIXED64,
+    TYPE_FIXED32,
+    TYPE_UINT32,
+    TYPE_SFIXED32,
+    TYPE_SFIXED64,
+    TYPE_SINT32,
+    TYPE_SINT64
+]);
+
+
+
+
+export const getTypeName = (type_id: TypeID) => {
     switch (type_id) {
         case TYPE_DOUBLE:  return "double";
         case TYPE_FLOAT:  return "float";
@@ -54,18 +95,18 @@ export const getTypeName = (type_id) => {
     }
 };
 
-export const getDefaultValue = (type_id, repeated, type_name, enums, types) => {
+export const getDefaultValue = (type_id : TypeID, repeated: bool, type_name: string, enums: any, types: any) : Value => {
     if (repeated) {
         return [];
     }
 
-    if (type_id in INT_TYPES) {
+    if (NUMBER_TYPE_IDS.has(type_id)) {
         return '0';
     }
     switch (type_id) {
         case TYPE_BOOL: //bool
             return 'false';
-        case 11: //msg
+        case TYPE_MESSAGE:
             const type = types[type_name];
             if (!type) { //TODO: hack for unknown types
                 return [];
@@ -74,7 +115,7 @@ export const getDefaultValue = (type_id, repeated, type_name, enums, types) => {
         case 14:
             const e = enums[type_name].values;
             const keys = Object.keys(e);
-            return  keys[0];
+            return keys[0];
         default:
             return '';
     }

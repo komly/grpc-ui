@@ -1,6 +1,7 @@
+/* @flow */
 import React, {Component} from 'react';
 import {Message} from './fields';
-import {getDefaultValue} from './types';
+import {getDefaultValue, Field, Type} from './types';
 
 function fieldsToVal(fields, val, types) {
     return fields.map((f, i) => {
@@ -17,26 +18,41 @@ function fieldsToVal(fields, val, types) {
     })
 }
 
-export default class Request extends Component {
-    constructor(props) {
+interface RequestProps {
+    types: any;
+    enums: any;
+    type_name: string;
+    onInvokeMethod(any): void;
+}
+
+interface RequestState {
+    val: any
+}
+
+
+export default class Request extends Component<RequestProps, RequestState> {
+    constructor(props: RequestProps) {
         super(props);
 
-        const type = props.types[props.type_name];
+        const type: Type = props.types[props.type_name];
+        const initialState: RequestState  = {
+            val: {}
+        };
 
-        this.state = !type ? {} : {
+        this.state = !type ? initialState : {
             val: type.fields.map((f) => getDefaultValue(f.type_id, f.is_repeated, f.type_name, props.enums, props.types)),
         };
     }
 
 
-    handleInvokeMethod(e) {
+    handleInvokeMethod(e: SyntheticEvent<HTMLFormElement>) {
         e.preventDefault();
         const type = this.props.types[this.props.type_name];
 
         this.props.onInvokeMethod(fieldsToVal(type.fields, this.state.val, this.props.types));
     }
 
-    handleChange(val) {
+    handleChange(val: any) {
         console.log(val);
         this.setState({
             val,
