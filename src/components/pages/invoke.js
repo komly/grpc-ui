@@ -1,133 +1,86 @@
 /* @flow */
 import React, { Component } from 'react';
-import axios from 'axios';
-import qs from 'qs';
+import { connect } from 'react-redux';
+
 import Sidebar from '../Sidebar';
 import Loader from '../Loader';
 import Error from '../Error';
 import Navbar from '../Navbar';
 import Service from '../Service';
+import * as actions from '../../actions/meta';
 // $FlowFixMe
 import './invoke.scss';
 
-const InvokePageContent = ({
-  addr,
-  onSubmit,
-  loading,
-  error,
-  packages,
-  types,
-  enums
-}) => (
-  <div>
-    <Navbar addr={addr} onSubmit={onSubmit} />
-    <div className="app">
-      <div className="app__container">
-        {loading ? (
-          <Loader />
-        ) : error ? (
-          <Error>{error}</Error>
-        ) : (
-          <div>
-            <div className="app__sidebar">
-              <Sidebar packages={packages} />
-            </div>
-            <div className="app__packages-list">
-              <div className="packages-list">
-                {Object.keys(packages).map(package_name =>
-                  packages[package_name].map(service => (
-                    <Service
-                      service={service}
-                      package_name={package_name}
-                      addr={addr}
-                      types={types}
-                      enums={enums}
-                    />
-                  ))
-                )}
-              </div>
-            </div>
-          </div>
-        )}
-      </div>
-    </div>
-  </div>
-);
-
-interface InvokePageState {
-  types: any;
-  packages: any;
-  enums: any;
-  loading: boolean;
-  error: ?string;
-}
-
-interface InvokePageProps {
-  history: {
-    push(string): void
-  };
-  match: {
-    params: {
-      addr: string
-    }
-  };
-}
-
-export default class InvokePage extends Component<
-  InvokePageProps,
-  InvokePageState
-> {
-  constructor(props: InvokePageProps) {
-    super(props);
-    this.state = {
-      loading: false,
-      error: undefined,
-      packages: [],
-      types: {},
-      enums: {}
-    };
-  }
+class InvokePage extends Component<any> {
   componentDidMount() {
     if (this.props.match.params.addr) {
-      this.loadData();
+      this.props.fetchMeta(this.props.match.params.addr);
     }
   }
-  loadData() {
-    this.setState({
-      loading: true
-    });
-    axios
-      .get(`/api/info?${qs.stringify({ addr: this.props.match.params.addr })}`)
-      .then(({ data: { data: { packages, types, enums } } }) => {
-        this.setState({
-          packages,
-          types,
-          enums,
-          error: null,
-          loading: false
-        });
-      })
-      .catch(({ response: { data: { error } } }) => {
-        this.setState({
-          loading: false,
-          error
-        });
-      });
-  }
-  handleNavbarSubmit = (host: string) => {
-    this.props.history.push(`/${host}`);
+  changeAddr = addr => {
+    this.props.history.push(`/${addr}`);
   };
   render() {
+    const {
+      loading,
+      error,
+      toggleMethod,
+      meta: { packages, types, enums },
+      match: { params: { addr } }
+    } = this.props;
+
     return (
-      <InvokePageContent
-        addr={this.props.match.params.addr}
-        onSubmit={this.handleNavbarSubmit}
-        loading={this.state.loading}
-        error={this.state.error}
-        packages={this.state.packages}
-        types={this.state.types}
-        enums={this.state.enums}
-      />
+      <div>
+        <Navbar addr={addr} changeAddr={this.changeAddr} />
+        <div className="app">
+          <div className="app__container">
+            {loading ? (
+              <Loader />
+            ) : error ? (
+              <Error>{error}</Error>
+            ) : (
+              <div>
+                <div className="app__sidebar">
+                  <Sidebar packages={packages} />
+                </div>
+                <div className="app__packages-list">
+                  <div className="packages-list">
+                    {Object.keys(packages).map(package_name =>
+                      packages[package_name].map(service => (
+                        <Service
+                          service={service}
+                          package_name={package_name}
+                          types={types}
+                          enums={enums}
+                          toggleMethod={method_name =>
+                            toggleMethod(
+                              package_name,
+                              service.name,
+                              method_name
+                            )
+                          }
+                        />
+                      ))
+                    )}
+                  </div>
+                </div>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
     );
   }
 }
+
+const mapStateToProps = state => ({
+  loading: state.meta.loading,
+  error: state.meta.error,
+  meta: state.meta.meta,
+  methods: state.methods
+});
+
+export default connect(mapStateToProps, {
+  fetchMeta: actions.fetchMeta,
+  toggleMethod: actions.toggleMethod
+})(InvokePage);

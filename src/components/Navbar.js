@@ -7,7 +7,7 @@ interface NavbarStateType {
   addr: string;
 }
 
-export default class Navbar extends Component<NavbarPropType, NavbarStateType> {
+class Navbar extends Component<NavbarPropType, NavbarStateType> {
   constructor(props: NavbarPropType) {
     super(props);
     this.state = {
@@ -16,7 +16,7 @@ export default class Navbar extends Component<NavbarPropType, NavbarStateType> {
   }
   handleSubmit = e => {
     e.preventDefault();
-    this.props.onSubmit(this.state.addr);
+    this.props.changeAddr(this.state.addr);
   };
   handleChange = e => {
     this.setState({
@@ -51,3 +51,5 @@ export default class Navbar extends Component<NavbarPropType, NavbarStateType> {
     );
   }
 }
+
+export default Navbar;

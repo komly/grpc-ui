@@ -41,6 +41,7 @@
   },
   "dependencies": {
     "axios": "^0.17.0",
+    "immutable": "^3.8.2",
     "qs": "^6.5.1",
     "react": "^16.0.0",
     "react-dom": "^16.0.0",
