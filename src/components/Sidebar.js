@@ -37,17 +37,15 @@ const ServicesList = ({ package_ }) => (
   </ul>
 );
 
-export default props => {
-  return (
-    <Sidebar>
-      <ul style={{ margin: 0, paddingLeft: '0px', listStyle: 'none' }}>
-        {Object.keys(props.packages).map(p => (
-          <li key={p}>
-            {p}
-            <ServicesList package_={props.packages[p]} />
-          </li>
-        ))}
-      </ul>
-    </Sidebar>
-  );
-};
+export default props => (
+  <Sidebar>
+    <ul style={{ margin: 0, paddingLeft: '0px', listStyle: 'none' }}>
+      {Object.keys(props.packages).map(p => (
+        <li key={p}>
+          {p}
+          <ServicesList package_={props.packages[p]} />
+        </li>
+      ))}
+    </ul>
+  </Sidebar>
+);

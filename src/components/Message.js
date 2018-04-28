@@ -6,7 +6,7 @@ const Message = props => (
   <table className="message">
     <tbody>
       {props.type.fields.map((f, i) => (
-        <tr className="field" key={i}>
+        <tr className="field" key={f.name}>
           <td className="message__cell message__cell--first">
             <label className="field__label" htmlFor={f.name}>
               <b>{f.name}</b>

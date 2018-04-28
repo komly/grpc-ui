@@ -5,10 +5,36 @@ import {
   TYPE_ENUM,
   TYPE_INT32,
   TYPE_MESSAGE,
-  getDefaultValue,
+  getDefaultValue
 } from './types';
 
-export const Field = props => {
+import type { TypeID, Value } from './types';
+
+import Message from './Message';
+
+export interface FieldProps {
+  type_name: string;
+  val: Value;
+  name: string;
+  type_id: TypeID;
+  onChange(Value): void;
+  types: any;
+  enums: any;
+  number: number;
+}
+
+export interface RepeatedFieldProps {
+  type_name: string;
+  val: Array<Value>;
+  name: string;
+  type_id: TypeID;
+  onChange(Array<Value>): void;
+  types: any;
+  enums: any;
+  number: number;
+}
+
+export const Field = (props: FieldProps) => {
   let input = null;
 
   switch (props.type_id) {
@@ -37,36 +63,42 @@ export const Field = props => {
       );
       break;
     case TYPE_MESSAGE:
-      const type = props.types[props.type_name];
-      if (!type) {
-        return <div>?????</div>;
+      {
+        const type = props.types[props.type_name];
+        if (!type) {
+          return <div>?????</div>;
+        }
+        input = (
+          <Message
+            type={type}
+            types={props.types}
+            val={props.val}
+            enums={props.enums}
+            onChange={props.onChange}
+          />
+        );
       }
-      input = (
-        <Message
-          type={type}
-          types={props.types}
-          val={props.val}
-          enums={props.enums}
-          onChange={props.onChange}
-        />
-      );
+
       break;
     case TYPE_ENUM:
-      const enum_ = props.enums[props.type_name];
-      if (!enum_) {
-        return <div>?????</div>;
+      {
+        const enum_ = props.enums[props.type_name];
+        if (!enum_) {
+          return <div>?????</div>;
+        }
+        input = (
+          <select
+            className="field__input"
+            value={props.val}
+            onChange={e => props.onChange(e.target.value)}
+          >
+            {Object.keys(enum_.values).map(k => (
+              <option value={k}>{enum_.values[k]}</option>
+            ))}
+          </select>
+        );
       }
-      input = (
-        <select
-          className="field__input"
-          value={props.val}
-          onChange={e => props.onChange(e.target.value)}
-        >
-          {Object.keys(enum_.values).map(k => (
-            <option value={k}>{enum_.values[k]}</option>
-          ))}
-        </select>
-      );
+
       break;
     default:
       input = (
@@ -85,7 +117,7 @@ export const Field = props => {
   return <div className="field__group">{input}</div>;
 };
 
-export const RepeatedField = props => (
+export const RepeatedField = (props: RepeatedFieldProps) => (
   <div className="field__group">
     {props.val.map((v, i) => (
       <Field
@@ -126,9 +158,9 @@ export const RepeatedField = props => (
                 false,
                 props.type_name,
                 props.enums,
-                props.types,
-              ),
-            ]),
+                props.types
+              )
+            ])
           );
         }}
       >

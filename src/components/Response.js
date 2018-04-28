@@ -1,18 +1,18 @@
-import React, { Component } from 'react';
+import React from 'react';
 import injectSheet from 'react-jss';
 import { getTypeName, TYPE_MESSAGE } from './types';
 
 const styles = {
   response: {
-    padding: '20px',
+    padding: '20px'
   },
   title: {
     'font-weight': 'body',
     'font-size': '20px',
     margin: '0',
     padding: '0',
-    'padding-bottom': '20px',
-  },
+    'padding-bottom': '20px'
+  }
 };
 
 const Response = props => {

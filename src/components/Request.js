@@ -1,19 +1,24 @@
 /* @flow */
 import React, { Component } from 'react';
 import Message from './Message';
-import { getDefaultValue, Field, Type } from './types';
+import { getDefaultValue, Type } from './types';
 
 function fieldsToVal(fields, val, types) {
   return fields.map((f, i) => {
     let exportedVal = val[i];
     switch (f.type_id) {
       case 11:
-        const type = types[f.type_name];
-        exportedVal = fieldsToVal(type.fields, val[i], types);
+        {
+          const type = types[f.type_name];
+          exportedVal = fieldsToVal(type.fields, val[i], types);
+        }
+        break;
+      default:
+        break;
     }
     return {
       number: f.number,
-      val: exportedVal,
+      val: exportedVal
     };
   });
 }
@@ -35,7 +40,7 @@ export default class Request extends Component<RequestProps, RequestState> {
 
     const type: Type = props.types[props.type_name];
     const initialState: RequestState = {
-      val: {},
+      val: {}
     };
 
     this.state = !type
@@ -47,38 +52,37 @@ export default class Request extends Component<RequestProps, RequestState> {
               f.is_repeated,
               f.type_name,
               props.enums,
-              props.types,
-            ),
-          ),
+              props.types
+            )
+          )
         };
   }
 
-  handleInvokeMethod(e: SyntheticEvent<HTMLFormElement>) {
+  handleInvokeMethod = (e: SyntheticEvent<HTMLFormElement>) => {
     e.preventDefault();
     const type = this.props.types[this.props.type_name];
 
     this.props.onInvokeMethod(
-      fieldsToVal(type.fields, this.state.val, this.props.types),
+      fieldsToVal(type.fields, this.state.val, this.props.types)
     );
-  }
+  };
 
-  handleChange(val: any) {
-    console.log(val);
+  handleChange = (val: any) => {
     this.setState({
-      val,
+      val
     });
-  }
+  };
 
   render() {
     const type = this.props.types[this.props.type_name];
     return type ? (
       <div className="form">
         <h4 className="form__title">{this.props.type_name}</h4>
-        <form onSubmit={this.handleInvokeMethod.bind(this)}>
+        <form onSubmit={this.handleInvokeMethod}>
           <Message
             type={type}
             val={this.state.val}
-            onChange={this.handleChange.bind(this)}
+            onChange={this.handleChange}
             types={this.props.types}
             enums={this.props.enums}
           />

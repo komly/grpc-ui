@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
-import './Method.scss';
 import axios from 'axios/index';
-import Request from './request';
 import JSONTree from 'react-json-tree';
+import Request from './Request';
 import Response from './Response';
+import './Method.scss';
 
 class Method extends Component {
   constructor(props) {
@@ -12,19 +12,19 @@ class Method extends Component {
       loading: false,
       expanded: false,
       result: '',
-      error: '',
+      error: ''
     };
   }
-  onHeadingClick() {
+  onHeadingClick = () => {
     this.setState({
-      expanded: !this.state.expanded,
+      expanded: !this.state.expanded
     });
-  }
-  handleInvokeMethod(args) {
+  };
+  handleInvokeMethod = args => {
     this.setState({
       error: '',
-      response: '',
-      loading: true,
+      result: '',
+      loading: true
     });
 
     axios
@@ -33,28 +33,28 @@ class Method extends Component {
         service_name: this.props.service_name,
         method_name: this.props.name,
         addr: this.props.addr,
-        grpc_args: args,
+        grpc_args: args
       })
       .then(resp => {
         this.setState({
           result: resp.data.data,
-          loading: false,
+          loading: false
         });
       })
       .catch(error => {
         if (error.response) {
           this.setState({
             error: error.response.data.error,
-            loading: false,
+            loading: false
           });
         } else {
           this.setState({
-            error: error,
-            loading: false,
+            error,
+            loading: false
           });
         }
       });
-  }
+  };
   render() {
     const theme = {
       scheme: 'bright',
@@ -74,15 +74,12 @@ class Method extends Component {
       base0C: '#76c7b7',
       base0D: '#04acb4',
       base0E: '#d381c3',
-      base0F: '#be643c',
+      base0F: '#be643c'
     };
 
     return (
       <div className={`method ${this.state.loading ? 'method--loading' : ''}`}>
-        <div
-          className="method__heading"
-          onClick={this.onHeadingClick.bind(this)}
-        >
+        <div className="method__heading" onClick={this.onHeadingClick}>
           <h4 className="method__name">
             {' '}
             {this.props.name}{' '}
@@ -98,7 +95,7 @@ class Method extends Component {
             type_name={this.props.in}
             types={this.props.types}
             enums={this.props.enums}
-            onInvokeMethod={this.handleInvokeMethod.bind(this)}
+            onInvokeMethod={this.handleInvokeMethod}
           />
           {this.state.error ? (
             <div className="method__error">{this.state.error}</div>
