@@ -5,7 +5,7 @@ export default class Navbar extends Component<{ onSubmit(string): void }, { addr
     constructor(props) {
         super(props);
         this.state = {
-            addr: '',
+            addr: props.addr || '',
         };
     }
     handleSubmit(e) {
@@ -31,5 +31,3 @@ export default class Navbar extends Component<{ onSubmit(string): void }, { addr
         );
     }
 }
-
-

@@ -1,13 +1,13 @@
 /* @flow */
 import React, {Component} from 'react';
-import Sidebar from '../components/Sidebar';
-import Method from '../components/Method';
-import Loader from '../components/Loader';
-import Error from '../components/Error';
-import Navbar from '../components/Navbar';
+import Sidebar from '../Sidebar';
+import Method from '../Method';
+import Loader from '../Loader';
+import Error from '../Error';
+import Navbar from '../Navbar';
 
 // $FlowFixMe
-import './index.scss';
+import './invoke.scss';
 import axios from 'axios';
 import qs from 'qs';
 
@@ -33,14 +33,15 @@ export default class InvokePage extends Component<InvokePageProps, InvokePageSta
         this.state = {
             loading: false,
             error: undefined,
-            addr: '',
             packages: [],
             types: {},
             enums: {},
         }
     }
     componentDidMount() {
-        this.loadData();
+        if (this.props.match.params.addr) {
+          this.loadData();
+        }
     }
     loadData() {
         this.setState({
@@ -62,12 +63,12 @@ export default class InvokePage extends Component<InvokePageProps, InvokePageSta
             });
     }
     handleNavbarSubmit(host) {
-        this.props.history.push('/invoke/' + host);
+        this.props.history.push('/' + host);
     }
     render() {
         return (
             <div>
-                <Navbar onSubmit={this.handleNavbarSubmit.bind(this)}/>
+                <Navbar addr={this.props.match.params.addr} onSubmit={this.handleNavbarSubmit.bind(this)}/>
                 <div className="app">
                     <div className="app__container">
                         {this.state.loading ?
@@ -108,5 +109,3 @@ export default class InvokePage extends Component<InvokePageProps, InvokePageSta
         );
     }
 }
-
-

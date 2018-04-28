@@ -1,13 +1,11 @@
 import {Route} from 'react-router-dom';
-import IndexPage from '../pages/index';
-import InvokePage from '../pages/invoke';
+import InvokePage from './pages/invoke';
 import React from 'react';
 
 
-const App = () => 
+const App = () =>
     <div>
-        <Route component={InvokePage} path="/invoke/:addr" />
-        <Route component={IndexPage} path="/" exact />
+        <Route render={(props) => <InvokePage key={props.match.params.addr} {...props}/>} path="/:addr?" />
     </div>
 
 export default App;
