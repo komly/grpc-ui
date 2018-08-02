@@ -5,4 +5,4 @@ gen-fixtures:
 build:
 	npm install
 	webpack
-	gostatic2lib -package http_server -path static/ -out http_server/static.go
+	go generate ./...

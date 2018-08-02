@@ -5,54 +5,44 @@ import (
 	"fmt"
 	"log"
 	"net/http"
+	"strings"
 
 	"github.com/gorilla/websocket"
 	"github.com/komly/grpc-ui/proto"
 	"github.com/komly/grpc-ui/reflection"
 )
 
-
-func New(addr, staticDir string) *HTTPServer {
+// New create HTTPServer on `addr`
+// if `devMode=true` then we use localFS instead of memFS
+func New(addr string, devMode bool) *HTTPServer {
 	mux := http.NewServeMux()
 
 	s := &HTTPServer{
 		addr: addr,
-		mux: mux,
+		mux:  mux,
 	}
 
 	mux.HandleFunc("/api/info", s.infoHandler)
 	mux.HandleFunc("/api/invoke", s.invokeHandler)
-	staticHandler := NewHTTPHandler()
 
-	if staticDir != "" {
-		mux.HandleFunc("/", s.indexHandler)
-	} else {
-		mux.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-			staticHandler.ServeFile(w, r, "/index.html")
-		})
-	}
-	if staticDir != "" {
-		mux.Handle("/static/", http.StripPrefix("/static", http.FileServer(http.Dir(staticDir))))
-	} else {
-		mux.Handle("/static/", http.StripPrefix("/static",  staticHandler))
-	}
+	mux.Handle("/static/", http.FileServer(FS(devMode)))
+	mux.HandleFunc("/", s.indexHandler)
 
 	return s
 }
 
-
-type HTTPServer struct{
-	addr string
+type HTTPServer struct {
+	addr       string
 	targetAddr string
-	mux *http.ServeMux
+	mux        *http.ServeMux
 }
 
 type InvokeReq struct {
-	Addr string `json:"addr"`
-	ServiceName string `json:"service_name"`
-	PackageName string `json:"package_name"`
-	MethodName string `json:"method_name"`
-	GRPCArgs   []proto.FieldValue `json:"grpc_args"`
+	Addr        string             `json:"addr"`
+	ServiceName string             `json:"service_name"`
+	PackageName string             `json:"package_name"`
+	MethodName  string             `json:"method_name"`
+	GRPCArgs    []proto.FieldValue `json:"grpc_args"`
 }
 
 type InvokeResp struct {
@@ -92,7 +82,7 @@ func (h *HTTPServer) infoHandler(w http.ResponseWriter, r *http.Request) {
 		w.WriteHeader(http.StatusInternalServerError)
 		resp := &InfoResp{
 			Status: "error",
-			Error: fmt.Sprintf("Can't get grpc info: %v", err),
+			Error:  fmt.Sprintf("Can't get grpc info: %v", err),
 		}
 		if err := enc.Encode(resp); err != nil {
 			log.Printf("Can't encode json response: %v", err)
@@ -101,10 +91,9 @@ func (h *HTTPServer) infoHandler(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-
 	resp := &InfoResp{
 		Status: "ok",
-		Data: info,
+		Data:   info,
 	}
 	if err := enc.Encode(resp); err != nil {
 		log.Printf("Can't encode json response: %v", err)
@@ -177,9 +166,12 @@ func (h *HTTPServer) handleStream(w http.ResponseWriter, r *http.Request) {
 
 }
 
-
 func (h *HTTPServer) indexHandler(w http.ResponseWriter, r *http.Request) {
-	http.ServeFile(w, r, "static/index.html")
+	if r.URL.Path == "/" || strings.HasPrefix(r.URL.Path, "/index.html") {
+		w.Write(FSMustByte(false, "/static/index.html"))
+		return
+	}
+	w.WriteHeader(404)
 }
 
 func (h *HTTPServer) Start() error {
