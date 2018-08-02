@@ -3,12 +3,12 @@ package proto
 import (
 	"context"
 	"fmt"
+
 	"github.com/komly/grpc-ui/reflection"
 	"google.golang.org/grpc"
 )
 
-
-func Invoke(ctx context.Context, addr string, packageName, serviceName, methodName string, data []FieldValue) (interface{}, error){
+func Invoke(ctx context.Context, addr string, packageName, serviceName, methodName string, data []FieldValue) (interface{}, error) {
 	info, err := reflection.GetInfo(ctx, addr)
 	if err != nil {
 		return nil, err
@@ -18,20 +18,10 @@ func Invoke(ctx context.Context, addr string, packageName, serviceName, methodNa
 	if err != nil {
 		return nil, err
 	}
-
-	valuesMap := make(map[string]interface{})
-
-	for _, f := range data {
-		for _, pf := range info.Types[inType].Fields {
-			if f.Number == pf.Number {
-				valuesMap[pf.Name] = f.Value
-			}
-		}
-	}
 	in := &Message{
 		TypeInfo: info.Types,
 		TypeName: inType,
-		Data: data,
+		Data:     data,
 	}
 
 	out := &Message{
@@ -52,7 +42,6 @@ func Invoke(ctx context.Context, addr string, packageName, serviceName, methodNa
 
 	return out.PB, nil
 }
-
 
 func findInType(info *reflection.InfoResp, packageName, serviceName, methodName string) (string, string, error) {
 	for _, s := range info.Packages[packageName] {
