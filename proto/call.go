@@ -34,7 +34,12 @@ func Invoke(ctx context.Context, addr string, packageName, serviceName, methodNa
 		return nil, err
 	}
 
-	methodFqdn := fmt.Sprintf("/%s.%s/%s", packageName, serviceName, methodName)
+	var methodFqdn string
+	if packageName == "" {
+		methodFqdn = fmt.Sprintf("/%s/%s", serviceName, methodName)
+	} else {
+		methodFqdn = fmt.Sprintf("/%s.%s/%s", packageName, serviceName, methodName)
+	}
 
 	if err := grpc.Invoke(ctx, methodFqdn, in, out, conn); err != nil {
 		return nil, err
