@@ -1,4 +1,4 @@
-@import "vars.scss";
+@import 'vars.scss';
 
 .method {
   border: 1px solid #eee;
@@ -13,7 +13,7 @@
     font: {
       wight: bold;
       size: 20px;
-    };
+    }
   }
 
   &__name {
@@ -26,7 +26,7 @@
 
       &:after {
         background: rgba(white, 0.8);
-        content: "";
+        content: '';
         display: block;
         position: absolute;
         top: 0;
@@ -60,7 +60,7 @@
     font: {
       weight: bold;
       size: 20px;
-    };
+    }
     margin: 0;
     padding: 0;
     padding-bottom: 10px;
@@ -101,7 +101,7 @@
     family: Roboto, sans-serif;
     weight: bold;
     size: 14px;
-  };
+  }
   transition: all 150ms ease-in-out;
 
   &--small {
@@ -109,7 +109,7 @@
     padding: 6px 10px;
     font: {
       size: 14px;
-    };
+    }
   }
 
   &:hover {
